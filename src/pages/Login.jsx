@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap'
 import { login, clearError } from '../store/authSlice'
 
 function Login() {
   const dispatch = useDispatch()
-  const { loading, error } = useSelector((state) => state.auth)
+  const navigate = useNavigate()
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth)
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
 
   useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
     return () => dispatch(clearError())
-  }, [dispatch])
+  }, [isAuthenticated, navigate, dispatch])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

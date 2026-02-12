@@ -1,6 +1,7 @@
 import { Collapse, Dropdown } from 'react-bootstrap'
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { logout } from '../store/authSlice'
 
 function Sidebar() {
@@ -23,9 +24,9 @@ function Sidebar() {
 
   return (
     <div className="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style={{ width: '280px', height: '100vh' }}>
-      <a href="/" className="d-flex align-items-center pb-3 mb-3 text-white text-decoration-none border-bottom">
+      <Link to="/" className="d-flex align-items-center pb-3 mb-3 text-white text-decoration-none border-bottom">
         <span className="fs-5 fw-semibold">SmartSME Admin</span>
-      </a>
+      </Link>
       <div style={{ overflowY: 'auto', flex: 1 }}>
         <ul className="list-unstyled ps-0">
           <li className="mb-1">
@@ -34,9 +35,9 @@ function Sidebar() {
             </button>
             <Collapse in={openMenus.company}>
               <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Buyer</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Seller</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Employee</a></li>
+                <li><Link to="/buyer" className="link-light d-inline-flex text-decoration-none rounded py-1">Buyer</Link></li>
+                <li><Link to="/seller" className="link-light d-inline-flex text-decoration-none rounded py-1">Seller</Link></li>
+                <li><Link to="/employee" className="link-light d-inline-flex text-decoration-none rounded py-1">Employee</Link></li>
               </ul>
             </Collapse>
           </li>
@@ -46,9 +47,9 @@ function Sidebar() {
             </button>
             <Collapse in={openMenus.production}>
               <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Machine</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Production Shift</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Dispatch</a></li>
+                <li><Link to="/machine" className="link-light d-inline-flex text-decoration-none rounded py-1">Machine</Link></li>
+                <li><Link to="/production-shift" className="link-light d-inline-flex text-decoration-none rounded py-1">Production Shift</Link></li>
+                <li><Link to="/dispatch" className="link-light d-inline-flex text-decoration-none rounded py-1">Dispatch</Link></li>
               </ul>
             </Collapse>
           </li>
@@ -58,10 +59,10 @@ function Sidebar() {
             </button>
             <Collapse in={openMenus.inventory}>
               <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Product</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Stock</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Order</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Invoice</a></li>
+                <li><Link to="/product" className="link-light d-inline-flex text-decoration-none rounded py-1">Product</Link></li>
+                <li><Link to="/stock" className="link-light d-inline-flex text-decoration-none rounded py-1">Stock</Link></li>
+                <li><Link to="/order" className="link-light d-inline-flex text-decoration-none rounded py-1">Order</Link></li>
+                <li><Link to="/invoice" className="link-light d-inline-flex text-decoration-none rounded py-1">Invoice</Link></li>
               </ul>
             </Collapse>
           </li>
@@ -72,9 +73,9 @@ function Sidebar() {
             </button>
             <Collapse in={openMenus.account}>
               <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">User</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Profile</a></li>
-                <li><a href="#" className="link-light d-inline-flex text-decoration-none rounded py-1">Settings</a></li>
+                <li><Link to="/user" className="link-light d-inline-flex text-decoration-none rounded py-1">User</Link></li>
+                <li><Link to="/profile" className="link-light d-inline-flex text-decoration-none rounded py-1">Profile</Link></li>
+                <li><Link to="/settings" className="link-light d-inline-flex text-decoration-none rounded py-1">Settings</Link></li>
               </ul>
             </Collapse>
           </li>
@@ -89,8 +90,8 @@ function Sidebar() {
             <strong>{user?.name || 'User'}</strong>
           </Dropdown.Toggle>
           <Dropdown.Menu variant="dark">
-            <Dropdown.Item href="#">Profile</Dropdown.Item>
-            <Dropdown.Item href="#">Settings</Dropdown.Item>
+            <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
+            <Dropdown.Item as={Link} to="/settings">Settings</Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
           </Dropdown.Menu>
