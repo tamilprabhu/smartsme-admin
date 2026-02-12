@@ -4,6 +4,7 @@ import ProductList from './product/ProductList'
 import ProductView from './product/ProductView'
 import ProductCreate from './product/ProductCreate'
 import ProductEdit from './product/ProductEdit'
+import ChangePassword from './ChangePassword'
 import EmptyPage from './EmptyPage'
 
 function Dashboard() {
@@ -28,7 +29,7 @@ function Dashboard() {
           <Route path="/invoice" element={<EmptyPage title="Invoice" />} />
           <Route path="/user" element={<EmptyPage title="User" />} />
           <Route path="/profile" element={<EmptyPage title="Profile" />} />
-          <Route path="/settings" element={<EmptyPage title="Settings" />} />
+          <Route path="/settings" element={<ChangePassword />} />
         </Routes>
       </div>
     </div>
