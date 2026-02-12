@@ -1,13 +1,21 @@
-import { useState } from 'react'
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap'
+import { login, clearError } from '../store/authSlice'
 
 function Login() {
-  const [email, setEmail] = useState('')
+  const dispatch = useDispatch()
+  const { loading, error } = useSelector((state) => state.auth)
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    return () => dispatch(clearError())
+  }, [dispatch])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Login:', { email, password })
+    dispatch(login({ identifier, password }))
   }
 
   return (
@@ -17,14 +25,15 @@ function Login() {
           <Card>
             <Card.Body className="p-4">
               <h3 className="text-center mb-4">Login</h3>
+              {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>Username</Form.Label>
                   <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    placeholder="Enter username"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -38,8 +47,8 @@ function Login() {
                     required
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="w-100">
-                  Login
+                <Button variant="primary" type="submit" className="w-100" disabled={loading}>
+                  {loading ? 'Logging in...' : 'Login'}
                 </Button>
               </Form>
             </Card.Body>

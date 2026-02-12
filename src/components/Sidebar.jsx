@@ -1,7 +1,11 @@
 import { Collapse, Dropdown } from 'react-bootstrap'
 import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../store/authSlice'
 
 function Sidebar() {
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth)
   const [openMenus, setOpenMenus] = useState({
     company: false,
     production: false,
@@ -11,6 +15,10 @@ function Sidebar() {
 
   const toggleMenu = (menu) => {
     setOpenMenus(prev => ({ ...prev, [menu]: !prev[menu] }))
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
   }
 
   return (
@@ -75,14 +83,16 @@ function Sidebar() {
       <div className="border-top pt-3">
         <Dropdown drop="up">
           <Dropdown.Toggle variant="link" className="d-flex align-items-center text-white text-decoration-none w-100" id="dropdown-user">
-            <img src="https://github.com/mdo.png" alt="" width="32" height="32" className="rounded-circle me-2" />
-            <strong>Admin</strong>
+            <div className="bg-secondary rounded-circle me-2 d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}>
+              <span className="text-white fw-bold">{user?.firstName?.[0] || 'U'}</span>
+            </div>
+            <strong>{user?.name || 'User'}</strong>
           </Dropdown.Toggle>
           <Dropdown.Menu variant="dark">
             <Dropdown.Item href="#">Profile</Dropdown.Item>
             <Dropdown.Item href="#">Settings</Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item href="#">Sign out</Dropdown.Item>
+            <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </div>
