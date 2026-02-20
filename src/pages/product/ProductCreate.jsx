@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Form, Button, Card } from 'react-bootstrap'
+import { Alert, Form, Button, Card } from 'react-bootstrap'
 import { API_BASE_URL } from '../../config'
 
 function ProductCreate() {
   const navigate = useNavigate()
+  const [error, setError] = useState('')
   const [formData, setFormData] = useState({
-    prodId: '',
-    companyId: 'FINO001',
-    prodName: '',
+    productName: '',
     rawMaterial: '',
     weight: '',
     wastage: '',
@@ -19,25 +18,59 @@ function ProductCreate() {
     perItemRate: '',
     incentiveLimit: '',
     salesType: 'Sales',
-    salesCode: 'HSN',
+    salesCode: '',
     salesPercent: ''
   })
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    const next = { ...formData, [name]: value }
+
+    if (name === 'weight' || name === 'wastage') {
+      const weight = Number(name === 'weight' ? value : next.weight) || 0
+      const wastage = Number(name === 'wastage' ? value : next.wastage) || 0
+      next.totalWeight = (weight * (1 + wastage / 100)).toFixed(4)
+    }
+
+    setFormData(next)
   }
+
+  const toPayload = () => ({
+    productName: formData.productName.trim(),
+    rawMaterial: formData.rawMaterial.trim(),
+    weight: Number(formData.weight),
+    wastage: Number(formData.wastage),
+    norms: Number(formData.norms),
+    totalWeight: Number(formData.totalWeight),
+    cavity: Number(formData.cavity),
+    shotRate: Number(formData.shotRate),
+    perItemRate: Number(formData.perItemRate),
+    incentiveLimit: Number(formData.incentiveLimit),
+    salesType: formData.salesType.trim(),
+    salesCode: formData.salesCode.trim(),
+    salesPercent: Number(formData.salesPercent)
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
+
     const token = localStorage.getItem('accessToken')
-    await fetch(`${API_BASE_URL}/product`, {
+    const response = await fetch(`${API_BASE_URL}/product`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(toPayload())
     })
+
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}))
+      setError(body?.message || body?.error || 'Failed to create product')
+      return
+    }
+
     navigate('/product')
   }
 
@@ -46,14 +79,15 @@ function ProductCreate() {
       <h1>Create Product</h1>
       <Card>
         <Card.Body>
+          {error ? <Alert variant="danger">{error}</Alert> : null}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
               <Form.Label>Product ID</Form.Label>
-              <Form.Control name="prodId" value={formData.prodId} onChange={handleChange} required />
+              <Form.Control value="Auto-generated" readOnly />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Product Name</Form.Label>
-              <Form.Control name="prodName" value={formData.prodName} onChange={handleChange} required />
+              <Form.Control name="productName" value={formData.productName} onChange={handleChange} required />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Raw Material</Form.Label>
@@ -61,15 +95,35 @@ function ProductCreate() {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Weight</Form.Label>
-              <Form.Control type="number" step="0.01" name="weight" value={formData.weight} onChange={handleChange} required />
+              <Form.Control type="number" step="0.0001" name="weight" value={formData.weight} onChange={handleChange} required />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Wastage (%)</Form.Label>
-              <Form.Control type="number" name="wastage" value={formData.wastage} onChange={handleChange} required />
+              <Form.Control type="number" step="1" name="wastage" value={formData.wastage} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Norms</Form.Label>
+              <Form.Control type="number" step="0.0001" name="norms" value={formData.norms} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Total Weight</Form.Label>
+              <Form.Control type="number" step="0.0001" name="totalWeight" value={formData.totalWeight} onChange={handleChange} required />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Cavity</Form.Label>
-              <Form.Control type="number" name="cavity" value={formData.cavity} onChange={handleChange} required />
+              <Form.Control type="number" step="1" name="cavity" value={formData.cavity} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Shot Rate</Form.Label>
+              <Form.Control type="number" step="0.01" name="shotRate" value={formData.shotRate} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Per Item Rate</Form.Label>
+              <Form.Control type="number" step="0.01" name="perItemRate" value={formData.perItemRate} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Incentive Limit</Form.Label>
+              <Form.Control type="number" step="1" name="incentiveLimit" value={formData.incentiveLimit} onChange={handleChange} required />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Sales Type</Form.Label>
@@ -80,10 +134,7 @@ function ProductCreate() {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Sales Code</Form.Label>
-              <Form.Select name="salesCode" value={formData.salesCode} onChange={handleChange} required>
-                <option value="HSN">HSN</option>
-                <option value="SAC">SAC</option>
-              </Form.Select>
+              <Form.Control name="salesCode" value={formData.salesCode} onChange={handleChange} required />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Sales %</Form.Label>

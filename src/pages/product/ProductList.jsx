@@ -15,12 +15,19 @@ function ProductList() {
 
   const fetchProducts = async () => {
     const token = localStorage.getItem('accessToken')
-    const response = await fetch(`${API_BASE_URL}/product?page=${page}&itemsPerPage=10&search=${search}`, {
+    const response = await fetch(`${API_BASE_URL}/product?page=${page}&itemsPerPage=10&search=${encodeURIComponent(search)}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
+
+    if (!response.ok) {
+      setProducts([])
+      setTotalPages(1)
+      return
+    }
+
     const data = await response.json()
-    setProducts(data.items)
-    setTotalPages(data.paging.totalPages)
+    setProducts(data?.items || [])
+    setTotalPages(data?.paging?.totalPages || 1)
   }
 
   const handleDelete = async (id) => {
@@ -61,18 +68,18 @@ function ProductList() {
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product.prodIdSeq}>
-              <td>{product.prodId}</td>
-              <td>{product.prodName}</td>
+            <tr key={product.prodSequence}>
+              <td>{product.productId}</td>
+              <td>{product.productName}</td>
               <td>{product.rawMaterial}</td>
               <td>{product.salesType}</td>
               <td>{product.salesCode}</td>
               <td>{product.salesPercent}</td>
               <td>{product.weight}</td>
               <td>
-                <Link to={`/product/${product.prodIdSeq}`} className="btn btn-sm btn-info me-2">View</Link>
-                <Link to={`/product/${product.prodIdSeq}/edit`} className="btn btn-sm btn-warning me-2">Edit</Link>
-                <Button size="sm" variant="danger" onClick={() => handleDelete(product.prodIdSeq)}>Delete</Button>
+                <Link to={`/product/${product.prodSequence}`} className="btn btn-sm btn-info me-2">View</Link>
+                <Link to={`/product/${product.prodSequence}/edit`} className="btn btn-sm btn-warning me-2">Edit</Link>
+                <Button size="sm" variant="danger" onClick={() => handleDelete(product.prodSequence)}>Delete</Button>
               </td>
             </tr>
           ))}

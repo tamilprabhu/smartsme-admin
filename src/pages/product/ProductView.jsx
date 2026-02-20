@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Card, Row, Col, Button } from 'react-bootstrap'
+import { Card, Row, Col } from 'react-bootstrap'
 import { API_BASE_URL } from '../../config'
 
 function ProductView() {
@@ -16,6 +16,12 @@ function ProductView() {
     const response = await fetch(`${API_BASE_URL}/product/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
+
+    if (!response.ok) {
+      setProduct(null)
+      return
+    }
+
     const data = await response.json()
     setProduct(data)
   }
@@ -35,8 +41,8 @@ function ProductView() {
         <Card.Body>
           <Row>
             <Col md={6}>
-              <p><strong>Product ID:</strong> {product.prodId}</p>
-              <p><strong>Name:</strong> {product.prodName}</p>
+              <p><strong>Product ID:</strong> {product.productId}</p>
+              <p><strong>Name:</strong> {product.productName}</p>
               <p><strong>Company ID:</strong> {product.companyId}</p>
               <p><strong>Raw Material:</strong> {product.rawMaterial}</p>
               <p><strong>Weight:</strong> {product.weight}</p>
