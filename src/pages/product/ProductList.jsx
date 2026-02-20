@@ -68,7 +68,7 @@ function ProductList() {
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product.prodSequence}>
+            <tr key={product.productSequence}>
               <td>{product.productId}</td>
               <td>{product.productName}</td>
               <td>{product.rawMaterial}</td>
@@ -77,9 +77,9 @@ function ProductList() {
               <td>{product.salesPercent}</td>
               <td>{product.weight}</td>
               <td>
-                <Link to={`/product/${product.prodSequence}`} className="btn btn-sm btn-info me-2">View</Link>
-                <Link to={`/product/${product.prodSequence}/edit`} className="btn btn-sm btn-warning me-2">Edit</Link>
-                <Button size="sm" variant="danger" onClick={() => handleDelete(product.prodSequence)}>Delete</Button>
+                <Link to={`/product/${product.productSequence}`} className="btn btn-sm btn-info me-2">View</Link>
+                <Link to={`/product/${product.productSequence}/edit`} className="btn btn-sm btn-warning me-2">Edit</Link>
+                <Button size="sm" variant="danger" onClick={() => handleDelete(product.productSequence)}>Delete</Button>
               </td>
             </tr>
           ))}
