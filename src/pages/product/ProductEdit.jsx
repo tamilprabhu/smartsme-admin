@@ -11,7 +11,10 @@ function ProductEdit() {
     rawMaterial: '',
     weight: '',
     wastage: '',
-    cavity: ''
+    cavity: '',
+    salesType: 'Sales',
+    salesCode: 'HSN',
+    salesPercent: ''
   })
 
   useEffect(() => {
@@ -29,7 +32,10 @@ function ProductEdit() {
       rawMaterial: data.rawMaterial,
       weight: data.weight,
       wastage: data.wastage,
-      cavity: data.cavity
+      cavity: data.cavity,
+      salesType: data.salesType || 'Sales',
+      salesCode: data.salesCode || 'HSN',
+      salesPercent: data.salesPercent ?? ''
     })
   }
 
@@ -76,6 +82,24 @@ function ProductEdit() {
             <Form.Group className="mb-3">
               <Form.Label>Cavity</Form.Label>
               <Form.Control type="number" name="cavity" value={formData.cavity} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Sales Type</Form.Label>
+              <Form.Select name="salesType" value={formData.salesType} onChange={handleChange} required>
+                <option value="Sales">Sales</option>
+                <option value="Contract">Contract</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Sales Code</Form.Label>
+              <Form.Select name="salesCode" value={formData.salesCode} onChange={handleChange} required>
+                <option value="HSN">HSN</option>
+                <option value="SAC">SAC</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Sales %</Form.Label>
+              <Form.Control type="number" step="0.01" name="salesPercent" value={formData.salesPercent} onChange={handleChange} required />
             </Form.Group>
             <Button type="submit" variant="primary" className="me-2">Update</Button>
             <Link to="/product" className="btn btn-secondary">Cancel</Link>

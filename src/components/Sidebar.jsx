@@ -47,6 +47,7 @@ function Sidebar() {
             {!collapsed && (
               <Collapse in={openMenus.company}>
                 <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
+                  <li><Link to="/company-creation" className="link-light d-inline-flex text-decoration-none rounded py-1">Company Registration</Link></li>
                   <li><Link to="/buyer" className="link-light d-inline-flex text-decoration-none rounded py-1">Buyer</Link></li>
                   <li><Link to="/seller" className="link-light d-inline-flex text-decoration-none rounded py-1">Seller</Link></li>
                   <li><Link to="/employee" className="link-light d-inline-flex text-decoration-none rounded py-1">Employee</Link></li>

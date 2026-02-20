@@ -49,6 +49,9 @@ function ProductView() {
               <p><strong>Shot Rate:</strong> {product.shotRate}</p>
               <p><strong>Per Item Rate:</strong> {product.perItemRate}</p>
               <p><strong>Incentive Limit:</strong> {product.incentiveLimit}</p>
+              <p><strong>Sales Type:</strong> {product.salesType}</p>
+              <p><strong>Sales Code:</strong> {product.salesCode}</p>
+              <p><strong>Sales %:</strong> {product.salesPercent}</p>
             </Col>
           </Row>
         </Card.Body>

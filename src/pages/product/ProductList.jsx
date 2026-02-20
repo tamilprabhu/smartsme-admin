@@ -52,6 +52,9 @@ function ProductList() {
             <th>Product ID</th>
             <th>Name</th>
             <th>Raw Material</th>
+            <th>Sales Type</th>
+            <th>Sales Code</th>
+            <th>Sales %</th>
             <th>Weight</th>
             <th>Actions</th>
           </tr>
@@ -62,6 +65,9 @@ function ProductList() {
               <td>{product.prodId}</td>
               <td>{product.prodName}</td>
               <td>{product.rawMaterial}</td>
+              <td>{product.salesType}</td>
+              <td>{product.salesCode}</td>
+              <td>{product.salesPercent}</td>
               <td>{product.weight}</td>
               <td>
                 <Link to={`/product/${product.prodIdSeq}`} className="btn btn-sm btn-info me-2">View</Link>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import AppNavbar from './components/Navbar'
@@ -24,20 +24,53 @@ function App() {
   const dispatch = useDispatch()
   const { isAuthenticated } = useSelector((state) => state.auth)
   const [showSessionModal, setShowSessionModal] = useState(false)
+  const timeoutRef = useRef(null)
+
+  const clearSessionTimer = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
+  }, [])
+
+  const startSessionTimer = useCallback(() => {
+    clearSessionTimer()
+    if (!isAuthenticated) return
+    timeoutRef.current = setTimeout(() => {
+      setShowSessionModal(true)
+    }, SESSION_TIMEOUT)
+  }, [clearSessionTimer, isAuthenticated])
 
   useEffect(() => {
     if (!isAuthenticated) return
 
     dispatch(getMe())
+    startSessionTimer()
 
-    const timer = setTimeout(() => {
-      setShowSessionModal(true)
-    }, SESSION_TIMEOUT)
+    const activityEvents = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click']
+    const handleActivity = () => {
+      if (!showSessionModal) {
+        startSessionTimer()
+      }
+    }
 
-    return () => clearTimeout(timer)
-  }, [isAuthenticated, dispatch])
+    activityEvents.forEach((eventName) => window.addEventListener(eventName, handleActivity))
+
+    return () => {
+      activityEvents.forEach((eventName) => window.removeEventListener(eventName, handleActivity))
+      clearSessionTimer()
+    }
+  }, [isAuthenticated, dispatch, startSessionTimer, clearSessionTimer, showSessionModal])
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setShowSessionModal(false)
+      clearSessionTimer()
+    }
+  }, [isAuthenticated, clearSessionTimer])
 
   const handleLogout = () => {
+    clearSessionTimer()
     dispatch(logout())
     setShowSessionModal(false)
   }
@@ -47,7 +80,7 @@ function App() {
       await dispatch(refreshToken()).unwrap()
       await dispatch(getMe()).unwrap()
       setShowSessionModal(false)
-      window.location.reload()
+      startSessionTimer()
     } catch {
       handleLogout()
     }

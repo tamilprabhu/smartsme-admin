@@ -6,6 +6,10 @@ import ProductCreate from './product/ProductCreate'
 import ProductEdit from './product/ProductEdit'
 import ChangePassword from './ChangePassword'
 import EmptyPage from './EmptyPage'
+import CompanyCreationList from './company-creation/CompanyCreationList'
+import CompanyCreationCreate from './company-creation/CompanyCreationCreate'
+import CompanyCreationView from './company-creation/CompanyCreationView'
+import CompanyCreationEdit from './company-creation/CompanyCreationEdit'
 
 function Dashboard() {
   return (
@@ -21,6 +25,10 @@ function Dashboard() {
           <Route path="/buyer" element={<EmptyPage title="Buyer" />} />
           <Route path="/seller" element={<EmptyPage title="Seller" />} />
           <Route path="/employee" element={<EmptyPage title="Employee" />} />
+          <Route path="/company-creation" element={<CompanyCreationList />} />
+          <Route path="/company-creation/create" element={<CompanyCreationCreate />} />
+          <Route path="/company-creation/:id" element={<CompanyCreationView />} />
+          <Route path="/company-creation/:id/edit" element={<CompanyCreationEdit />} />
           <Route path="/machine" element={<EmptyPage title="Machine" />} />
           <Route path="/production-shift" element={<EmptyPage title="Production Shift" />} />
           <Route path="/dispatch" element={<EmptyPage title="Dispatch" />} />
