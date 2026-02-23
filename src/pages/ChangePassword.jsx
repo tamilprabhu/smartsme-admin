@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { API_BASE_URL } from '../config'
+import { apiRequest } from '../services/api'
 
 function ChangePassword() {
   const [formData, setFormData] = useState({
@@ -33,18 +34,21 @@ function ChangePassword() {
 
     setLoading(true)
     try {
-      const token = localStorage.getItem('accessToken')
-      const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          currentPassword: formData.currentPassword,
-          newPassword: formData.newPassword
-        })
-      })
+      const endpoint = `/auth/change-password`;
+      const response = await apiRequest(endpoint,"POST",{currentPassword: formData.currentPassword,
+          newPassword: formData.newPassword});
+      // const token = localStorage.getItem('accessToken')
+      // const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${token}`
+      //   },
+      //   body: JSON.stringify({
+      //     currentPassword: formData.currentPassword,
+      //     newPassword: formData.newPassword
+      //   })
+      // })
 
       const data = await response.json()
 

@@ -1,12 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { API_BASE_URL } from '../config'
+import { apiRequest } from '../services/api';
 
 export const login = createAsyncThunk('auth/login', async ({ identifier, password }) => {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ identifier, password })
-  })
+  const endpoint = `/auth/login`;
+  const response = await apiRequest(endpoint,"POST",{ identifier, password });
+  // const response = await fetch(`${API_BASE_URL}/auth/login`, {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ identifier, password })
+  // })
   if (!response.ok) throw new Error('Login failed')
   const data = await response.json()
   localStorage.setItem('accessToken', data.accessToken)
@@ -15,12 +18,14 @@ export const login = createAsyncThunk('auth/login', async ({ identifier, passwor
 })
 
 export const refreshToken = createAsyncThunk('auth/refresh', async () => {
+  const endpoint = `/auth/refresh`;
   const token = localStorage.getItem('refreshToken')
-  const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refreshToken: token })
-  })
+  const response = await apiRequest(endpoint,"POST",{ refreshToken: token });
+  // const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ refreshToken: token })
+  // })
   if (!response.ok) throw new Error('Refresh failed')
   const data = await response.json()
   localStorage.setItem('accessToken', data.accessToken)
@@ -28,20 +33,24 @@ export const refreshToken = createAsyncThunk('auth/refresh', async () => {
 })
 
 export const getMe = createAsyncThunk('auth/me', async () => {
-  const token = localStorage.getItem('accessToken')
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
+  const endpoint = `/auth/me`;
+  const response = await apiRequest(endpoint);
+  // const token = localStorage.getItem('accessToken')
+  // const response = await fetch(`${API_BASE_URL}/auth/me`, {
+  //   headers: { 'Authorization': `Bearer ${token}` }
+  // })
   if (!response.ok) throw new Error('Failed to get user')
   return response.json()
 })
 
 export const logout = createAsyncThunk('auth/logout', async () => {
-  const token = localStorage.getItem('accessToken')
-  await fetch(`${API_BASE_URL}/auth/logout`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
+  const endpoint = `/auth/logout`;
+  await apiRequest(endpoint,"POST");
+  // const token = localStorage.getItem('accessToken')
+  // await fetch(`${API_BASE_URL}/auth/logout`, {
+  //   method: 'POST',
+  //   headers: { 'Authorization': `Bearer ${token}` }
+  // })
   localStorage.removeItem('accessToken')
   localStorage.removeItem('refreshToken')
 })
