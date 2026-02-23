@@ -3,7 +3,7 @@ import { apiRequest, buildPagedUrl } from '../../api/httpClient'
 import { ItemsPerPage, SortBy, SortOrder } from '../../constants/listing'
 
 const API_ORIGIN = new URL(API_BASE_URL, window.location.origin).origin
-const COMPANY_CREATION_API_URL = `${API_ORIGIN}/api/v1/company-registrations`
+const COMPANY_CREATION_API_URL = `${API_ORIGIN}/api/1.0.0/company-registrations`
 const ROLE_API_URL = `${API_BASE_URL}/role`
 const REFERENCE_API_URL = `${API_BASE_URL}/reference`
 
