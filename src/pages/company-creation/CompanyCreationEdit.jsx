@@ -22,7 +22,7 @@ const emptyForm = {
   user: {
     username: '', firstName: '', lastName: '', name: '', email: '', mobile: '', address: '', password: ''
   },
-  roleUser: { roleId: 2 }
+  roleUser: { roleId: '' }
 }
 
 const buildPayload = (form) => {
@@ -64,7 +64,9 @@ function CompanyCreationEdit() {
           getStates()
         ])
 
-        setRoles(roleResponse?.items || [])
+        const allRoles = roleResponse?.items || []
+        const ownerRole = allRoles.find((role) => role?.name === 'OWNER')
+        setRoles(ownerRole ? [ownerRole] : [])
         setStates(stateResponse || [])
 
         setForm({
@@ -78,7 +80,7 @@ function CompanyCreationEdit() {
             username: data.User?.username || '', firstName: data.User?.firstName || '', lastName: data.User?.lastName || '',
             name: data.User?.name || '', email: data.User?.email || '', mobile: data.User?.mobile || '', address: data.User?.address || '', password: ''
           },
-          roleUser: { roleId: data.User?.UserRoles?.[0]?.roleId || 2 }
+          roleUser: { roleId: ownerRole?.id || '' }
         })
 
         if (/^\d{6}$/.test(String(data.pincode || '').trim())) {

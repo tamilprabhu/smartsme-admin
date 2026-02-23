@@ -12,10 +12,12 @@ function CompanyCreationForm({
   onStateChange = () => {},
   onPincodeChange = () => {},
   serverValidationErrors = {},
-  clearServerError = () => {}
+  clearServerError = () => {},
+  lockRoleSelection = true
 }) {
   const hasServerError = (field) => (serverValidationErrors[field] || []).length > 0
   const getServerError = (field) => (serverValidationErrors[field] || [])[0] || ''
+  const ownerRoles = roles.filter((role) => role?.name === 'OWNER')
 
   const updateCompany = (field, value) => {
     clearServerError(field)
@@ -90,9 +92,9 @@ function CompanyCreationForm({
       <h5 className="mb-3 mt-4">Role</h5>
       <Form.Group className="mb-3">
         <Form.Label>Role</Form.Label>
-        <Form.Select value={form.roleUser.roleId || ''} onChange={(e) => updateRole('roleId', Number(e.target.value) || '')} disabled={readOnly} isInvalid={hasServerError('roleId')}>
-          <option value="">Select Role</option>
-          {roles.map((role) => <option key={role.id} value={role.id}>{role.name}</option>)}
+        <Form.Select value={form.roleUser.roleId || ''} onChange={(e) => updateRole('roleId', Number(e.target.value) || '')} disabled={readOnly || lockRoleSelection} isInvalid={hasServerError('roleId')}>
+          {ownerRoles.length === 0 && <option value="">OWNER role not found</option>}
+          {ownerRoles.map((role) => <option key={role.id} value={role.id}>{role.name}</option>)}
         </Form.Select>
         <Form.Control.Feedback type="invalid">{getServerError('roleId')}</Form.Control.Feedback>
       </Form.Group>

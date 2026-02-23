@@ -21,7 +21,7 @@ const defaultForm = {
   user: {
     username: '', firstName: '', lastName: '', name: '', email: '', mobile: '', address: '', password: ''
   },
-  roleUser: { roleId: 2 }
+  roleUser: { roleId: '' }
 }
 
 const buildPayload = (form) => {
@@ -51,7 +51,10 @@ function CompanyCreationCreate() {
     const loadHelpers = async () => {
       try {
         const [roleResponse, stateResponse] = await Promise.all([getRoles(1, 100), getStates()])
-        setRoles(roleResponse?.items || [])
+        const allRoles = roleResponse?.items || []
+        const ownerRole = allRoles.find((role) => role?.name === 'OWNER')
+        setRoles(ownerRole ? [ownerRole] : [])
+        setForm((prev) => ({ ...prev, roleUser: { ...prev.roleUser, roleId: ownerRole?.id || '' } }))
         setStates(stateResponse || [])
       } catch {
         setError('Failed to load helper APIs (roles/states)')
