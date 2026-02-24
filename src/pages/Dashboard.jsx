@@ -13,9 +13,9 @@ import CompanyCreationEdit from './company-creation/CompanyCreationEdit'
 
 function Dashboard() {
   return (
-    <div className="d-flex">
+    <div className="d-flex vh-100 overflow-hidden">
       <Sidebar />
-      <div className="flex-grow-1 p-4">
+      <div className="flex-grow-1 p-4 overflow-auto">
         <Routes>
           <Route path="/" element={<h1>Dashboard</h1>} />
           <Route path="/product" element={<ProductList />} />
