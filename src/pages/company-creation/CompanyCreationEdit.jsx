@@ -10,7 +10,7 @@ import {
   getDistricts,
   getPincodes
 } from './companyCreationApi'
-import { extractServerValidationErrors, getFirstServerError } from '../../utils/serverValidation'
+import { clearValidationError, extractServerValidationErrors, getFirstServerError } from '../../utils/serverValidation'
 
 const emptyForm = {
   company: {
@@ -98,10 +98,7 @@ function CompanyCreationEdit() {
   }, [id])
 
   const clearServerError = (field) => {
-    if (!serverValidationErrors[field]) return
-    const next = { ...serverValidationErrors }
-    delete next[field]
-    setServerValidationErrors(next)
+    clearValidationError(serverValidationErrors, setServerValidationErrors, field)
   }
 
   const handleStateChange = async (stateId) => {

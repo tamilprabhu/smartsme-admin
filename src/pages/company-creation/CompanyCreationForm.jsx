@@ -1,4 +1,5 @@
 import { Form, Row, Col } from 'react-bootstrap'
+import { getValidationError, hasValidationError } from '../../utils/serverValidation'
 
 function CompanyCreationForm({
   form,
@@ -15,17 +16,8 @@ function CompanyCreationForm({
   clearServerError = () => {},
   lockRoleSelection = true
 }) {
-  const findServerMessages = (fieldOrFields) => {
-    const fields = Array.isArray(fieldOrFields) ? fieldOrFields : [fieldOrFields]
-    for (const field of fields) {
-      const messages = serverValidationErrors[field]
-      if ((messages || []).length > 0) return messages
-    }
-    return []
-  }
-
-  const hasServerError = (fieldOrFields) => findServerMessages(fieldOrFields).length > 0
-  const getServerError = (fieldOrFields) => findServerMessages(fieldOrFields).join(' ')
+  const hasServerError = (fieldOrFields) => hasValidationError(serverValidationErrors, fieldOrFields)
+  const getServerError = (fieldOrFields) => getValidationError(serverValidationErrors, fieldOrFields)
   const ownerRoles = roles.filter((role) => role?.name === 'OWNER')
 
   const companyFieldKeys = (field) => [field, `company.${field}`]
